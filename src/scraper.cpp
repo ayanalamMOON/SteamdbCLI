@@ -76,7 +76,7 @@ GameData Scraper::parseGameData(const std::string& html) {
     }
 
     // Extract current price
-    std::regex currentPriceRegex("<div class=\"price\">(.*?)</div>");
+    std::regex currentPriceRegex("<td class=\"current-price\">(.*?)</td>");
     std::smatch currentPriceMatch;
     if (std::regex_search(html, currentPriceMatch, currentPriceRegex)) {
         gameData.currentPrice = currentPriceMatch[1].str();
@@ -85,7 +85,7 @@ GameData Scraper::parseGameData(const std::string& html) {
     }
 
     // Extract lowest price
-    std::regex lowestPriceRegex("<div class=\"lowest-price\">(.*?)</div>");
+    std::regex lowestPriceRegex("<td class=\"lowest-price\">(.*?)</td>");
     std::smatch lowestPriceMatch;
     if (std::regex_search(html, lowestPriceMatch, lowestPriceRegex)) {
         gameData.lowestPrice = lowestPriceMatch[1].str();
