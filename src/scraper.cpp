@@ -1,5 +1,6 @@
 #include "scraper.h"
 #include "network_utils.h"
+#include "rate_limiter.h"
 #include <curl/curl.h>
 #include <regex>
 
@@ -48,6 +49,46 @@ GameData Scraper::searchGame(const std::string& gameName) {
 
 GameData Scraper::parseGameData(const std::string& html) {
     GameData gameData;
-    // Implement HTML parsing logic to extract game data
+
+    std::regex nameRegex("<td class=\"b\">(.*?)</td>");
+    std::regex appIdRegex("<td class=\"b\">(\\d+)</td>");
+    std::regex currentPriceRegex("<td class=\"price\">(.*?)</td>");
+    std::regex lowestPriceRegex("<td class=\"price\">(.*?)</td>");
+    std::regex metacriticRegex("<td class=\"score\">(.*?)</td>");
+    std::regex releaseDateRegex("<td class=\"date\">(.*?)</td>");
+    std::regex tagsRegex("<a class=\"tag\" href=\".*?\">(.*?)</a>");
+    std::regex descriptionRegex("<div class=\"description\">(.*?)</div>");
+
+    std::smatch match;
+
+    if (std::regex_search(html, match, nameRegex)) {
+        gameData.name = match[1].str();
+    }
+    if (std::regex_search(html, match, appIdRegex)) {
+        gameData.appId = match[1].str();
+    }
+    if (std::regex_search(html, match, currentPriceRegex)) {
+        gameData.currentPrice = match[1].str();
+    }
+    if (std::regex_search(html, match, lowestPriceRegex)) {
+        gameData.lowestPrice = match[1].str();
+    }
+    if (std::regex_search(html, match, metacriticRegex)) {
+        gameData.metacritic = match[1].str();
+    }
+    if (std::regex_search(html, match, releaseDateRegex)) {
+        gameData.releaseDate = match[1].str();
+    }
+    if (std::regex_search(html, match, descriptionRegex)) {
+        gameData.description = match[1].str();
+    }
+
+    auto tagsBegin = std::sregex_iterator(html.begin(), html.end(), tagsRegex);
+    auto tagsEnd = std::sregex_iterator();
+
+    for (std::sregex_iterator i = tagsBegin; i != tagsEnd; ++i) {
+        gameData.tags.push_back((*i)[1].str());
+    }
+
     return gameData;
 }

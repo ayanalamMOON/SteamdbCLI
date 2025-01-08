@@ -9,6 +9,7 @@ int main() {
     logger.init("steamdb_cli.log");
 
     GameCache gameCache;
+    Scraper scraper;
 
     std::cout << "Welcome to Steamdb CLI!" << std::endl;
     std::cout << "Type the name of a game to search for its information." << std::endl;
@@ -28,7 +29,6 @@ int main() {
                 std::cout << "Cached Data: " << cachedData.name << std::endl;
                 logger.info("Fetched cached data for game: " + gameName);
             } else {
-                Scraper scraper;
                 GameData gameData = scraper.searchGame(gameName);
                 gameCache.addGame(gameName, gameData);
                 std::cout << "Fetched Data: " << gameData.name << std::endl;
