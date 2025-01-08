@@ -27,12 +27,34 @@ int main() {
             if (gameCache.hasGame(gameName)) {
                 GameData cachedData = gameCache.getGame(gameName);
                 std::cout << "Cached Data: " << cachedData.name << std::endl;
+                std::cout << "App ID: " << cachedData.appId << std::endl;
+                std::cout << "Current Price: " << cachedData.currentPrice << std::endl;
+                std::cout << "Lowest Price: " << cachedData.lowestPrice << std::endl;
+                std::cout << "Metacritic Score: " << cachedData.metacritic << std::endl;
+                std::cout << "Release Date: " << cachedData.releaseDate << std::endl;
+                std::cout << "Tags: ";
+                for (const auto& tag : cachedData.tags) {
+                    std::cout << tag << " ";
+                }
+                std::cout << std::endl;
+                std::cout << "Description: " << cachedData.description << std::endl;
                 logger.info("Fetched cached data for game: " + gameName);
             } else {
                 Scraper scraper;
                 GameData gameData = scraper.searchGame(gameName);
                 gameCache.addGame(gameName, gameData);
                 std::cout << "Fetched Data: " << gameData.name << std::endl;
+                std::cout << "App ID: " << gameData.appId << std::endl;
+                std::cout << "Current Price: " << gameData.currentPrice << std::endl;
+                std::cout << "Lowest Price: " << gameData.lowestPrice << std::endl;
+                std::cout << "Metacritic Score: " << gameData.metacritic << std::endl;
+                std::cout << "Release Date: " << gameData.releaseDate << std::endl;
+                std::cout << "Tags: ";
+                for (const auto& tag : gameData.tags) {
+                    std::cout << tag << " ";
+                }
+                std::cout << std::endl;
+                std::cout << "Description: " << gameData.description << std::endl;
                 logger.info("Fetched data for game: " + gameName);
             }
         } catch (const NetworkError& e) {
