@@ -62,6 +62,8 @@ GameData Scraper::parseGameData(const std::string& html) {
     std::smatch nameMatch;
     if (std::regex_search(html, nameMatch, nameRegex)) {
         gameData.name = nameMatch[1].str();
+    } else {
+        throw std::runtime_error("Failed to parse game name");
     }
 
     // Extract app ID
@@ -69,20 +71,26 @@ GameData Scraper::parseGameData(const std::string& html) {
     std::smatch appIdMatch;
     if (std::regex_search(html, appIdMatch, appIdRegex)) {
         gameData.appId = appIdMatch[1].str();
+    } else {
+        throw std::runtime_error("Failed to parse app ID");
     }
 
     // Extract current price
-    std::regex currentPriceRegex("<td class=\"price\">(.*?)</td>");
+    std::regex currentPriceRegex("<td class=\"current-price\">(.*?)</td>");
     std::smatch currentPriceMatch;
     if (std::regex_search(html, currentPriceMatch, currentPriceRegex)) {
         gameData.currentPrice = currentPriceMatch[1].str();
+    } else {
+        throw std::runtime_error("Failed to parse current price");
     }
 
     // Extract lowest price
-    std::regex lowestPriceRegex("<td class=\"price\">(.*?)</td>");
+    std::regex lowestPriceRegex("<td class=\"lowest-price\">(.*?)</td>");
     std::smatch lowestPriceMatch;
     if (std::regex_search(html, lowestPriceMatch, lowestPriceRegex)) {
         gameData.lowestPrice = lowestPriceMatch[1].str();
+    } else {
+        throw std::runtime_error("Failed to parse lowest price");
     }
 
     // Extract Metacritic score
@@ -90,6 +98,8 @@ GameData Scraper::parseGameData(const std::string& html) {
     std::smatch metacriticMatch;
     if (std::regex_search(html, metacriticMatch, metacriticRegex)) {
         gameData.metacritic = metacriticMatch[1].str();
+    } else {
+        throw std::runtime_error("Failed to parse Metacritic score");
     }
 
     // Extract release date
@@ -97,6 +107,8 @@ GameData Scraper::parseGameData(const std::string& html) {
     std::smatch releaseDateMatch;
     if (std::regex_search(html, releaseDateMatch, releaseDateRegex)) {
         gameData.releaseDate = releaseDateMatch[1].str();
+    } else {
+        throw std::runtime_error("Failed to parse release date");
     }
 
     // Extract tags
@@ -113,6 +125,8 @@ GameData Scraper::parseGameData(const std::string& html) {
     std::smatch descriptionMatch;
     if (std::regex_search(html, descriptionMatch, descriptionRegex)) {
         gameData.description = descriptionMatch[1].str();
+    } else {
+        throw std::runtime_error("Failed to parse description");
     }
 
     return gameData;
