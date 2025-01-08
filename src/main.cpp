@@ -4,6 +4,7 @@
 #include "logger.h"
 #include "game_cache.h"
 
+// Main function to run the Steamdb CLI program
 int main() {
     Logger logger;
     logger.init("steamdb_cli.log");
