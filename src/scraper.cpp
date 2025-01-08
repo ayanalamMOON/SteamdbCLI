@@ -1,4 +1,5 @@
 #include "scraper.h"
+#include "network_utils.h"
 #include <curl/curl.h>
 #include <regex>
 
@@ -31,7 +32,7 @@ std::string Scraper::fetchPage(const std::string& url) {
         curl_easy_cleanup(curl);
         
         if (res != CURLE_OK) {
-            throw std::runtime_error("Failed to fetch page");
+            throw NetworkError("Failed to fetch page");
         }
     }
     
@@ -39,9 +40,14 @@ std::string Scraper::fetchPage(const std::string& url) {
 }
 
 GameData Scraper::searchGame(const std::string& gameName) {
-    // Note: This is a simplified version. You'll need to implement proper
-    // SteamDB search and parsing logic here
-    std::string url = "https://steamdb.info/search/?q=" + gameName;
+    std::string baseUrl = "https://steamdb.info/search/?q=";
+    std::string url = NetworkUtils::constructUrl(baseUrl, gameName);
     std::string page = fetchPage(url);
     return parseGameData(page);
+}
+
+GameData Scraper::parseGameData(const std::string& html) {
+    GameData gameData;
+    // Implement HTML parsing logic to extract game data
+    return gameData;
 }

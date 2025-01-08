@@ -3,6 +3,7 @@
 #include "rate_limiter.h"
 #include <string>
 #include <memory>
+#include "network_utils.h"
 
 class Scraper {
 public:
