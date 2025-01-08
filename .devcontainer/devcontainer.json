@@ -1,5 +1,6 @@
 {
   "tasks": {
-    "build": "mkdir -p build && cd build && cmake .. && make"
+    "build": "mkdir -p build && cd build && cmake .. && make",
+    "launch": "mkdir -p build && cd build && cmake .. && make && ./steamdb_cli"
   }
 }

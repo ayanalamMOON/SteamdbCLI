@@ -5,6 +5,7 @@
 
 namespace NetworkUtils {
 
+    // Check if there is an active internet connection
     bool checkInternetConnection() {
         CURL* curl;
         CURLcode res;
@@ -21,6 +22,7 @@ namespace NetworkUtils {
         return false;
     }
 
+    // Encode a URL string to make it safe for use in a URL
     std::string urlEncode(const std::string& str) {
         std::ostringstream encoded;
         for (char c : str) {
@@ -33,6 +35,7 @@ namespace NetworkUtils {
         return encoded.str();
     }
 
+    // Construct a URL by combining a base URL and a query string
     std::string constructUrl(const std::string& baseUrl, const std::string& query) {
         return baseUrl + urlEncode(query);
     }
