@@ -59,10 +59,12 @@ int main() {
             }
         } catch (const NetworkError& e) {
             std::cerr << "Network Error: " << e.what() << std::endl;
-            logger.error("Network error while fetching data for game: " + gameName);
+            std::cerr << "Please check your internet connection and try again." << std::endl;
+            logger.error("Network error while fetching data for game: " + gameName, __FUNCTION__, __FILE__, __LINE__);
         } catch (const std::exception& e) {
             std::cerr << "Error: " << e.what() << std::endl;
-            logger.error("Error while fetching data for game: " + gameName);
+            std::cerr << "An unexpected error occurred. Please try again later." << std::endl;
+            logger.error("Error while fetching data for game: " + gameName, __FUNCTION__, __FILE__, __LINE__);
         }
     }
 

@@ -2,6 +2,7 @@
 #include <curl/curl.h>
 #include <sstream>
 #include <iomanip>
+#include "error_handling.h"
 
 namespace NetworkUtils {
 
@@ -17,9 +18,12 @@ namespace NetworkUtils {
             curl_easy_cleanup(curl);
             if(res == CURLE_OK) {
                 return true;
+            } else {
+                throw NetworkError("Failed to check internet connection: " + std::string(curl_easy_strerror(res)));
             }
+        } else {
+            throw NetworkError("Failed to initialize CURL for internet connection check");
         }
-        return false;
     }
 
     // Encode a URL string to make it safe for use in a URL
@@ -37,7 +41,14 @@ namespace NetworkUtils {
 
     // Construct a URL by combining a base URL and a query string
     std::string constructUrl(const std::string& baseUrl, const std::string& query) {
-        return baseUrl + urlEncode(query);
+        try {
+            return baseUrl + urlEncode(query);
+        } catch (const std::exception& e) {
+            throw NetworkError("Failed to construct URL: " + std::string(e.what()));
+        }
     }
 
 }
+
+// Declare the global error handler function as an external function
+extern void globalErrorHandler();

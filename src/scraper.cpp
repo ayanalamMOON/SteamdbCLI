@@ -2,6 +2,7 @@
 #include "network_utils.h"
 #include <curl/curl.h>
 #include <regex>
+#include "error_handling.h"
 
 // Callback function to write data received from the server to a string
 static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
@@ -49,7 +50,14 @@ std::string Scraper::fetchPage(const std::string& url) {
 GameData Scraper::searchGame(const std::string& gameName) {
     std::string baseUrl = "https://steamdb.info/search/?q=";
     std::string url = NetworkUtils::constructUrl(baseUrl, gameName);
-    std::string page = fetchPage(url);
+    std::string page;
+    try {
+        page = fetchPage(url);
+    } catch (const NetworkError& e) {
+        throw NetworkError("Network error while searching for game: " + gameName + ". " + e.what());
+    } catch (const std::exception& e) {
+        throw std::runtime_error("Unexpected error while searching for game: " + gameName + ". " + e.what());
+    }
     return parseGameData(page);
 }
 
@@ -116,4 +124,19 @@ GameData Scraper::parseGameData(const std::string& html) {
     }
 
     return gameData;
+}
+
+// Global error handler function to catch and log unhandled exceptions
+void globalErrorHandler() {
+    try {
+        throw; // Re-throw the current exception
+    } catch (const std::exception& e) {
+        std::cerr << "Unhandled exception: " << e.what() << std::endl;
+        // Log the error (assuming a logger instance is available)
+        // logger.error("Unhandled exception: " + std::string(e.what()));
+    } catch (...) {
+        std::cerr << "Unhandled unknown exception" << std::endl;
+        // Log the error (assuming a logger instance is available)
+        // logger.error("Unhandled unknown exception");
+    }
 }
