@@ -30,9 +30,7 @@ The CLI tool includes the following personalized features:
 
 2. Build the project:
    ```
-   mkdir -p build && cd build
-   cmake ..
-   make
+   mkdir -p build && cd build && cmake .. && make 
    ```
 
 3. Run the tests:
@@ -50,9 +48,7 @@ The CLI tool includes the following personalized features:
 
 2. Build the project:
    ```
-   mkdir -p build && cd build
-   cmake ..
-   make
+   mkdir -p build && cd build && cmake .. && make && ./SteamdbCLI
    ```
 
 3. Run the CLI tool:
