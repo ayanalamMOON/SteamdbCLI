@@ -8,6 +8,19 @@ Steamdb CLI is a command-line interface (CLI) tool that allows users to search f
 
 The purpose of this project is to provide a simple and efficient way for users to access game information from the Steam database using a command-line interface. This tool can be useful for gamers, developers, and researchers who want to quickly retrieve game data without using a web browser.
 
+## New Features
+
+### Large Scale ASCII Header Title
+
+The CLI tool now displays a large scale ASCII header title at the beginning of the program.
+
+### Personalized Features
+
+The CLI tool includes the following personalized features:
+- Displaying the current time
+- Displaying a random game quote
+- Maintaining and displaying search history
+
 ## How to Set Up the Development Environment
 
 1. Install dependencies:
