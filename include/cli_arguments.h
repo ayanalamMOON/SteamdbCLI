@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
 
 class CliArguments {
 public:
@@ -10,6 +11,12 @@ public:
     
     // Parse the game name from command line arguments
     static std::string parseGameName(int argc, char* argv[]);
+    
+    // Save the search history to a file
+    static void saveSearchHistory(const std::vector<std::string>& searchHistory, const std::string& filename);
+    
+    // Load the search history from a file
+    static std::vector<std::string> loadSearchHistory(const std::string& filename);
     
 private:
     static const char* USAGE;
@@ -45,4 +52,31 @@ std::string CliArguments::parseGameName(int argc, char* argv[]) {
     }
 
     return gameName;
+}
+
+// Save the search history to a file
+void CliArguments::saveSearchHistory(const std::vector<std::string>& searchHistory, const std::string& filename) {
+    std::ofstream outFile(filename);
+    if (!outFile) {
+        std::cerr << "Error: Unable to open file for writing: " << filename << std::endl;
+        return;
+    }
+    for (const auto& search : searchHistory) {
+        outFile << search << std::endl;
+    }
+}
+
+// Load the search history from a file
+std::vector<std::string> CliArguments::loadSearchHistory(const std::string& filename) {
+    std::vector<std::string> searchHistory;
+    std::ifstream inFile(filename);
+    if (!inFile) {
+        std::cerr << "Error: Unable to open file for reading: " << filename << std::endl;
+        return searchHistory;
+    }
+    std::string line;
+    while (std::getline(inFile, line)) {
+        searchHistory.push_back(line);
+    }
+    return searchHistory;
 }
