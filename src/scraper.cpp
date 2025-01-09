@@ -123,6 +123,13 @@ GameData Scraper::parseGameData(const std::string& html) {
         gameData.description = descriptionMatch[1].str();
     }
 
+    // Extract review score
+    std::regex reviewScoreRegex("<div class=\"review-score\">(.*?)</div>");
+    std::smatch reviewScoreMatch;
+    if (std::regex_search(html, reviewScoreMatch, reviewScoreRegex)) {
+        gameData.reviewScore = reviewScoreMatch[1].str();
+    }
+
     return gameData;
 }
 

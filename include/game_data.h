@@ -12,4 +12,5 @@ struct GameData {
     std::string releaseDate; // Release date of the game
     std::vector<std::string> tags; // Tags associated with the game
     std::string description; // Description of the game
+    std::string reviewScore; // Review score of the game
 };

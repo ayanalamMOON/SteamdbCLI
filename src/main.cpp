@@ -80,6 +80,7 @@ int main() {
                 }
                 std::cout << std::endl;
                 std::cout << "Description: " << cachedData.description << std::endl;
+                std::cout << "Review Score: " << cachedData.reviewScore << std::endl;
                 logger.info("Fetched cached data for game: " + gameName);
             } else {
                 Scraper scraper;
@@ -97,6 +98,7 @@ int main() {
                 }
                 std::cout << std::endl;
                 std::cout << "Description: " << gameData.description << std::endl;
+                std::cout << "Review Score: " << gameData.reviewScore << std::endl;
                 logger.info("Fetched data for game: " + gameName);
             }
         } catch (const NetworkError& e) {
