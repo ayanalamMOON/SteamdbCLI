@@ -60,4 +60,8 @@ To set up the development environment for Steamdb CLI, follow these steps:
    make test
    ```
 
+## Header Design
+
+The main menu now includes a large scale header design to enhance the visual appeal. When contributing to the project, ensure that any changes to the main menu maintain the integrity and visual appeal of the header design.
+
 Thank you for your contributions! We appreciate your help in making Steamdb CLI better.
