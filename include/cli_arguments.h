@@ -17,6 +17,15 @@ public:
     
     // Load the search history from a file
     static std::vector<std::string> loadSearchHistory(const std::string& filename);
+
+    // Display the user's Steam library
+    static void displaySteamLibrary();
+
+    // Display the user's wishlist
+    static void displayWishlist();
+
+    // Recommend games based on search history
+    static void recommendGames(const std::vector<std::string>& searchHistory);
     
 private:
     static const char* USAGE;

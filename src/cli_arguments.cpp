@@ -1,4 +1,8 @@
 #include "cli_arguments.h"
+#include <iostream>
+#include <vector>
+#include <string>
+#include <fstream>
 
 // Save the search history to a file
 void CliArguments::saveSearchHistory(const std::vector<std::string>& searchHistory, const std::string& filename) {
@@ -25,4 +29,22 @@ std::vector<std::string> CliArguments::loadSearchHistory(const std::string& file
         searchHistory.push_back(line);
     }
     return searchHistory;
+}
+
+// Display the user's Steam library
+void CliArguments::displaySteamLibrary() {
+    // Placeholder implementation
+    std::cout << "Displaying user's Steam library..." << std::endl;
+}
+
+// Display the user's wishlist
+void CliArguments::displayWishlist() {
+    // Placeholder implementation
+    std::cout << "Displaying user's wishlist..." << std::endl;
+}
+
+// Recommend games based on search history
+void CliArguments::recommendGames(const std::vector<std::string>& searchHistory) {
+    // Placeholder implementation
+    std::cout << "Recommending games based on search history..." << std::endl;
 }
