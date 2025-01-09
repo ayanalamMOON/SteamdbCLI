@@ -42,8 +42,8 @@ The CLI tool includes the following personalized features:
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/steamdb_cli.git
-   cd steamdb_cli
+   git clone https://github.com/yourusername/SteamdbCLi.git
+   cd SteamdbCLI
    ```
 
 2. Build the project:
@@ -53,7 +53,7 @@ The CLI tool includes the following personalized features:
 
 3. Run the CLI tool:
    ```
-   ./steamdb_cli
+   ./SteamdbCLI
    ```
 
 4. Enter the name of the game you want to search for when prompted.
