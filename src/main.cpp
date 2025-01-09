@@ -18,6 +18,8 @@ void printHeader() {
  ___) | || (_) | | | | | | (_| | |_| | |_) | | |___| |___ | |
 |____/ \__\___/|_| |_| |_|\__,_|____/|____/  \____|_____|___|
     )" << std::endl;
+    std::cout << "           Your terminal is now a gaming database" << std::endl;
+    std::cout << "           ------------------------------------" << std::endl;
 }
 
 // Function to display the current time
