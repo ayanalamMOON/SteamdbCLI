@@ -2,7 +2,7 @@
 
 ## Overview
 
-Steamdb CLI is a command-line interface (CLI) tool that allows users to search for information about games available on Steam. The tool fetches data from the Steam database and provides details such as the game's name, app ID, current price, lowest price, Metacritic score, release date, tags, and description.
+Steamdb CLI is a command-line interface (CLI) tool that allows users to search for information about games available on Steam. The tool fetches data from the Steam database and provides details such as the game's name, app ID, current price, lowest price, Metacritic score, release date, tags, description, and review score.
 
 ## Purpose
 
@@ -85,7 +85,7 @@ Enter game name (or type 'exit' to quit): exit
 
 ## Expected Output
 
-When you search for a game, the CLI tool will fetch and display the game's information, including its name, app ID, current price, lowest price, Metacritic score, release date, tags, and description. If the game is found in the cache, the cached data will be displayed. If the game is not found in the cache, the tool will fetch the data from the Steam database and add it to the cache.
+When you search for a game, the CLI tool will fetch and display the game's information, including its name, app ID, current price, lowest price, Metacritic score, release date, tags, description, and review score. If the game is found in the cache, the cached data will be displayed. If the game is not found in the cache, the tool will fetch the data from the Steam database and add it to the cache.
 
 ## Error Handling
 
