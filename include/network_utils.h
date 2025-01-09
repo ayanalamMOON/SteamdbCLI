@@ -17,4 +17,7 @@ namespace NetworkUtils {
     
     // Construct a URL by combining a base URL and a query string
     std::string constructUrl(const std::string& baseUrl, const std::string& query);
+
+    // Retry failed network requests with exponential backoff
+    std::string fetchPageWithRetry(const std::string& url, int maxRetries = 3, int retryDelay = 2000);
 }

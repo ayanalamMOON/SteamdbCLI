@@ -6,7 +6,34 @@
 #include <thread>
 #include <chrono>
 
+// Callback function to write data received from the server to a string
+static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
+    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
+
 namespace NetworkUtils {
+
+    // Fetch the HTML content of a web page
+    std::string fetchPage(const std::string& url) {
+        CURL* curl;
+        CURLcode res;
+        std::string readBuffer;
+        curl = curl_easy_init();
+        if(curl) {
+            curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+            res = curl_easy_perform(curl);
+            curl_easy_cleanup(curl);
+            if(res != CURLE_OK) {
+                throw NetworkError("Failed to fetch page: " + std::string(curl_easy_strerror(res)));
+            }
+        } else {
+            throw NetworkError("Failed to initialize CURL for fetching page");
+        }
+        return readBuffer;
+    }
 
     // Check if there is an active internet connection
     bool checkInternetConnection() {
@@ -66,33 +93,6 @@ namespace NetworkUtils {
             ++attempt;
         }
         throw NetworkError("Failed to fetch page after " + std::to_string(maxRetries) + " attempts");
-    }
-
-    // Fetch the HTML content of a web page
-    std::string fetchPage(const std::string& url) {
-        CURL* curl;
-        CURLcode res;
-        std::string readBuffer;
-        curl = curl_easy_init();
-        if(curl) {
-            curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-            res = curl_easy_perform(curl);
-            curl_easy_cleanup(curl);
-            if(res != CURLE_OK) {
-                throw NetworkError("Failed to fetch page: " + std::string(curl_easy_strerror(res)));
-            }
-        } else {
-            throw NetworkError("Failed to initialize CURL for fetching page");
-        }
-        return readBuffer;
-    }
-
-    // Callback function to write data received from the server to a string
-    static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
-        ((std::string*)userp)->append((char*)contents, size * nmemb);
-        return size * nmemb;
     }
 
 }

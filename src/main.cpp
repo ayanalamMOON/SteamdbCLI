@@ -6,6 +6,8 @@
 #include "scraper.h"
 #include "logger.h"
 #include "game_cache.h"
+#include "config.h"
+#include <iomanip>
 
 // Large scale ASCII header title
 void printHeader() {
@@ -39,6 +41,36 @@ void displayRandomQuote() {
     std::cout << "Random Game Quote: " << quotes[randomIndex] << std::endl;
 }
 
+// Function to apply user configurations
+void applyUserConfigurations(Config& config) {
+    std::string colorOutput = config.get("color_output");
+    if (colorOutput == "true") {
+        std::cout << "\033[1;32m"; // Set text color to green
+    }
+}
+
+// Function to reset text color
+void resetTextColor() {
+    std::cout << "\033[0m"; // Reset text color
+}
+
+// Function to display game information in a tabular format
+void displayGameInfo(const GameData& gameData) {
+    std::cout << std::left << std::setw(20) << "Name" << ": " << gameData.name << std::endl;
+    std::cout << std::left << std::setw(20) << "App ID" << ": " << gameData.appId << std::endl;
+    std::cout << std::left << std::setw(20) << "Current Price" << ": " << gameData.currentPrice << std::endl;
+    std::cout << std::left << std::setw(20) << "Lowest Price" << ": " << gameData.lowestPrice << std::endl;
+    std::cout << std::left << std::setw(20) << "Metacritic Score" << ": " << gameData.metacritic << std::endl;
+    std::cout << std::left << std::setw(20) << "Release Date" << ": " << gameData.releaseDate << std::endl;
+    std::cout << std::left << std::setw(20) << "Tags" << ": ";
+    for (const auto& tag : gameData.tags) {
+        std::cout << tag << " ";
+    }
+    std::cout << std::endl;
+    std::cout << std::left << std::setw(20) << "Description" << ": " << gameData.description << std::endl;
+    std::cout << std::left << std::setw(20) << "Review Score" << ": " << gameData.reviewScore << std::endl;
+}
+
 // Main function to run the Steamdb CLI program
 int main() {
     Logger logger;
@@ -46,6 +78,10 @@ int main() {
 
     GameCache gameCache;
     std::vector<std::string> searchHistory;
+
+    Config config;
+    config.load("config.txt");
+    applyUserConfigurations(config);
 
     printHeader();
     displayCurrentTime();
@@ -68,37 +104,13 @@ int main() {
         try {
             if (gameCache.hasGame(gameName)) {
                 GameData cachedData = gameCache.getGame(gameName);
-                std::cout << "Cached Data: " << cachedData.name << std::endl;
-                std::cout << "App ID: " << cachedData.appId << std::endl;
-                std::cout << "Current Price: " << cachedData.currentPrice << std::endl;
-                std::cout << "Lowest Price: " << cachedData.lowestPrice << std::endl;
-                std::cout << "Metacritic Score: " << cachedData.metacritic << std::endl;
-                std::cout << "Release Date: " << cachedData.releaseDate << std::endl;
-                std::cout << "Tags: ";
-                for (const auto& tag : cachedData.tags) {
-                    std::cout << tag << " ";
-                }
-                std::cout << std::endl;
-                std::cout << "Description: " << cachedData.description << std::endl;
-                std::cout << "Review Score: " << cachedData.reviewScore << std::endl;
+                displayGameInfo(cachedData);
                 logger.info("Fetched cached data for game: " + gameName);
             } else {
                 Scraper scraper;
                 GameData gameData = scraper.searchGame(gameName);
                 gameCache.addGame(gameName, gameData);
-                std::cout << "Fetched Data: " << gameData.name << std::endl;
-                std::cout << "App ID: " << gameData.appId << std::endl;
-                std::cout << "Current Price: " << gameData.currentPrice << std::endl;
-                std::cout << "Lowest Price: " << gameData.lowestPrice << std::endl;
-                std::cout << "Metacritic Score: " << gameData.metacritic << std::endl;
-                std::cout << "Release Date: " << gameData.releaseDate << std::endl;
-                std::cout << "Tags: ";
-                for (const auto& tag : gameData.tags) {
-                    std::cout << tag << " ";
-                }
-                std::cout << std::endl;
-                std::cout << "Description: " << gameData.description << std::endl;
-                std::cout << "Review Score: " << gameData.reviewScore << std::endl;
+                displayGameInfo(gameData);
                 logger.info("Fetched data for game: " + gameName);
             }
         } catch (const NetworkError& e) {
@@ -117,6 +129,8 @@ int main() {
     for (const auto& search : searchHistory) {
         std::cout << search << std::endl;
     }
+
+    resetTextColor();
 
     return 0;
 }

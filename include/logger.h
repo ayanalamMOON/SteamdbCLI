@@ -27,6 +27,9 @@ public:
     
     // Log a debug message
     void debug(const std::string& message);
+
+    // Log a retry attempt for a failed network request
+    void logRetryAttempt(const std::string& url, int attemptNumber);
     
 private:
     std::ofstream logFile; // Log file stream
@@ -71,6 +74,13 @@ void Logger::error(const std::string& message, const std::string& functionName, 
 // Log a debug message
 void Logger::debug(const std::string& message) {
     log("DEBUG", message);
+}
+
+// Log a retry attempt for a failed network request
+void Logger::logRetryAttempt(const std::string& url, int attemptNumber) {
+    std::ostringstream oss;
+    oss << "Retry attempt " << attemptNumber << " for URL: " << url;
+    log("RETRY", oss.str());
 }
 
 // Log a message with a specific level
