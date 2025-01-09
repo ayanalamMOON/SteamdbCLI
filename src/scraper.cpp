@@ -48,8 +48,8 @@ std::string Scraper::fetchPage(const std::string& url) {
 
 // Search for a game by name and return its data
 GameData Scraper::searchGame(const std::string& gameName) {
-    std::string baseUrl = "https://steamdb.info/search/?q=";
-    std::string url = NetworkUtils::constructUrl(baseUrl, gameName);
+    std::string baseUrl = "https://steamdb.info/search/";
+    std::string url = baseUrl + "?term=" + NetworkUtils::urlEncode(gameName);
     std::string page;
     try {
         page = fetchPage(url);
@@ -65,69 +65,70 @@ GameData Scraper::searchGame(const std::string& gameName) {
 GameData Scraper::parseGameData(const std::string& html) {
     GameData gameData;
 
-    // Extract game name
-    std::regex nameRegex("<h1 class=\"page-title\">(.*?)</h1>");
-    std::smatch nameMatch;
-    if (std::regex_search(html, nameMatch, nameRegex)) {
-        gameData.name = nameMatch[1].str();
+    // Check if search returned any results
+    if (html.find("No results found") != std::string::npos) {
+        throw std::runtime_error("No games found matching the search criteria");
     }
 
-    // Extract app ID
-    std::regex appIdRegex("data-appid=\"(\\d+)\"");
-    std::smatch appIdMatch;
-    if (std::regex_search(html, appIdMatch, appIdRegex)) {
-        gameData.appId = appIdMatch[1].str();
-    }
+    // Extract from search results table
+    std::regex tableRowRegex("<tr[^>]*data-appid=\"(\\d+)\"[^>]*>\\s*"
+                            "<td[^>]*>.*?</td>\\s*"  // Type column
+                            "<td[^>]*><a[^>]*>(.*?)</a>.*?</td>\\s*"  // Name column
+                            "<td[^>]*>(.*?)</td>");  // Release date column
 
-    // Extract current price
-    std::regex currentPriceRegex("<td class=\"price\">(.*?)</td>");
-    std::smatch currentPriceMatch;
-    if (std::regex_search(html, currentPriceMatch, currentPriceRegex)) {
-        gameData.currentPrice = currentPriceMatch[1].str();
-    }
+    std::smatch tableMatch;
+    if (std::regex_search(html, tableMatch, tableRowRegex)) {
+        gameData.appId = tableMatch[1].str();
+        gameData.name = tableMatch[2].str();
+        gameData.releaseDate = tableMatch[3].str();
 
-    // Extract lowest price
-    std::regex lowestPriceRegex("<td class=\"price\">(.*?)</td>");
-    std::smatch lowestPriceMatch;
-    if (std::regex_search(html, lowestPriceMatch, lowestPriceRegex)) {
-        gameData.lowestPrice = lowestPriceMatch[1].str();
-    }
+        // Fetch detailed page for the game
+        std::string detailUrl = "https://steamdb.info/app/" + gameData.appId + "/";
+        try {
+            std::string detailPage = fetchPage(detailUrl);
+            
+            // Extract price
+            std::regex priceRegex("<td[^>]*>Current Price:</td>\\s*<td[^>]*>(.*?)</td>");
+            std::smatch priceMatch;
+            if (std::regex_search(detailPage, priceMatch, priceRegex)) {
+                gameData.currentPrice = priceMatch[1].str();
+            }
 
-    // Extract Metacritic score
-    std::regex metacriticRegex("<div class=\"score\">(.*?)</div>");
-    std::smatch metacriticMatch;
-    if (std::regex_search(html, metacriticMatch, metacriticRegex)) {
-        gameData.metacritic = metacriticMatch[1].str();
-    }
+            // Extract lowest price
+            std::regex lowestPriceRegex("<td[^>]*>Lowest Price:</td>\\s*<td[^>]*>(.*?)</td>");
+            std::smatch lowestMatch;
+            if (std::regex_search(detailPage, lowestMatch, lowestPriceRegex)) {
+                gameData.lowestPrice = lowestMatch[1].str();
+            }
 
-    // Extract release date
-    std::regex releaseDateRegex("<td class=\"date\">(.*?)</td>");
-    std::smatch releaseDateMatch;
-    if (std::regex_search(html, releaseDateMatch, releaseDateRegex)) {
-        gameData.releaseDate = releaseDateMatch[1].str();
-    }
+            // Extract Metacritic score
+            std::regex metacriticRegex("Metacritic Score:</td>\\s*<td[^>]*><a[^>]*>(\\d+)</a>");
+            std::smatch metacriticMatch;
+            if (std::regex_search(detailPage, metacriticMatch, metacriticRegex)) {
+                gameData.metacritic = metacriticMatch[1].str();
+            }
 
-    // Extract tags
-    std::regex tagsRegex("<a class=\"tag\" href=\".*?\">(.*?)</a>");
-    std::smatch tagsMatch;
-    std::string::const_iterator searchStart(html.cbegin());
-    while (std::regex_search(searchStart, html.cend(), tagsMatch, tagsRegex)) {
-        gameData.tags.push_back(tagsMatch[1].str());
-        searchStart = tagsMatch.suffix().first;
-    }
+            // Extract tags
+            std::regex tagsRegex("<a[^>]*class=\"app-tag\"[^>]*>(.*?)</a>");
+            std::smatch tagsMatch;
+            std::string::const_iterator searchStart(detailPage.cbegin());
+            while (std::regex_search(searchStart, detailPage.cend(), tagsMatch, tagsRegex)) {
+                gameData.tags.push_back(tagsMatch[1].str());
+                searchStart = tagsMatch.suffix().first;
+            }
 
-    // Extract description
-    std::regex descriptionRegex("<div class=\"game-description\">(.*?)</div>");
-    std::smatch descriptionMatch;
-    if (std::regex_search(html, descriptionMatch, descriptionRegex)) {
-        gameData.description = descriptionMatch[1].str();
-    }
-
-    // Extract review score
-    std::regex reviewScoreRegex("<div class=\"review-score\">(.*?)</div>");
-    std::smatch reviewScoreMatch;
-    if (std::regex_search(html, reviewScoreMatch, reviewScoreRegex)) {
-        gameData.reviewScore = reviewScoreMatch[1].str();
+            // Extract review score
+            std::regex reviewRegex("User Reviews:</td>\\s*<td[^>]*>(.*?)</td>");
+            std::smatch reviewMatch;
+            if (std::regex_search(detailPage, reviewMatch, reviewRegex)) {
+                gameData.reviewScore = reviewMatch[1].str();
+            }
+        } catch (const std::exception& e) {
+            // If detail page fails, we still return basic info from search
+            std::cerr << "Warning: Could not fetch detailed information: " << e.what() << std::endl;
+        }
+    } else {
+        throw std::runtime_error("Could not parse search results");
     }
 
     return gameData;
