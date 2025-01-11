@@ -8,6 +8,7 @@
 #include "game_cache.h"
 #include "config.h"
 #include <iomanip>
+#include "cli_arguments.h"
 
 // Large scale ASCII header title
 void printHeader() {
@@ -70,8 +71,24 @@ void displayGameInfo(const GameData& gameData) {
     std::cout << std::left << std::setw(20) << "Review Score" << ": " << gameData.reviewScore << std::endl;
 }
 
+// Function to display a progress bar
+void displayProgressBar(int progress, int total) {
+    int barWidth = 50;
+    float progressRatio = static_cast<float>(progress) / total;
+    int pos = static_cast<int>(barWidth * progressRatio);
+
+    std::cout << "[";
+    for (int i = 0; i < barWidth; ++i) {
+        if (i < pos) std::cout << "=";
+        else if (i == pos) std::cout << ">";
+        else std::cout << " ";
+    }
+    std::cout << "] " << int(progressRatio * 100.0) << " %\r";
+    std::cout.flush();
+}
+
 // Main function to run the Steamdb CLI program
-int main() {
+int main(int argc, char* argv[]) {
     Logger logger;
     logger.init("steamdb_cli.log");
 
@@ -89,9 +106,13 @@ int main() {
     std::cout << "Welcome to Steamdb CLI!" << std::endl;
     std::cout << "Type the name of a game to search for its information." << std::endl;
 
+    std::string gameName = CliArguments::parseGameName(argc, argv);
+    if (gameName.empty()) {
+        return 1;
+    }
+
     while (true) {
         std::cout << "\nEnter game name (or type 'exit' to quit): ";
-        std::string gameName;
         std::getline(std::cin, gameName);
 
         if (gameName == "exit") {
@@ -107,17 +128,23 @@ int main() {
                 logger.info("Fetched cached data for game: " + gameName);
             } else {
                 Scraper scraper;
+                std::cout << "Fetching data for game: " << gameName << std::endl;
+                for (int i = 0; i <= 100; ++i) {
+                    displayProgressBar(i, 100);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+                }
+                std::cout << std::endl;
                 GameData gameData = scraper.searchGame(gameName);
                 gameCache.addGame(gameName, gameData);
                 displayGameInfo(gameData);
                 logger.info("Fetched data for game: " + gameName);
             }
         } catch (const NetworkError& e) {
-            std::cerr << "Network Error: " << e.what() << std::endl;
+            std::cerr << "\033[1;31mNetwork Error: " << e.what() << "\033[0m" << std::endl;
             std::cerr << "Please check your internet connection and try again." << std::endl;
             logger.error("Network error while fetching data for game: " + gameName, __FUNCTION__, __FILE__, __LINE__);
         } catch (const std::exception& e) {
-            std::cerr << "Error: " << e.what() << std::endl;
+            std::cerr << "\033[1;31mError: " << e.what() << "\033[0m" << std::endl;
             std::cerr << "An unexpected error occurred. Please try again later." << std::endl;
             logger.error("Error while fetching data for game: " + gameName, __FUNCTION__, __FILE__, __LINE__);
         }
