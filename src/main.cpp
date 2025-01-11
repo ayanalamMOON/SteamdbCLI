@@ -107,7 +107,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Type the name of a game to search for its information." << std::endl;
 
     while (true) {
-        std::string gameName = CliArguments::handleRuntimeGameNameInput();
+        std::string gameName = CliArguments::getGameNameFromUser();
 
         if (gameName == "exit") {
             break;

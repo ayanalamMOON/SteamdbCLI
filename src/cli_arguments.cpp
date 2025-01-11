@@ -49,24 +49,6 @@ void CliArguments::recommendGames(const std::vector<std::string>& searchHistory)
     std::cout << "Recommending games based on search history..." << std::endl;
 }
 
-// Parse command-line arguments for options and game names
-void CliArguments::parseArguments(int argc, char* argv[], std::string& gameName, std::vector<std::string>& options) {
-    for (int i = 1; i < argc; ++i) {
-        std::string arg = argv[i];
-        if (arg == "-h" || arg == "--help") {
-            displayHelpMessage();
-            exit(0);
-        } else if (arg[0] == '-') {
-            options.push_back(arg);
-        } else {
-            if (!gameName.empty()) {
-                gameName += " ";
-            }
-            gameName += arg;
-        }
-    }
-}
-
 // Display help message and usage information
 void CliArguments::displayHelpMessage() {
     std::cout << USAGE;
