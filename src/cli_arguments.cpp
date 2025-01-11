@@ -54,7 +54,7 @@ void CliArguments::parseArguments(int argc, char* argv[], std::string& gameName,
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
         if (arg == "-h" || arg == "--help") {
-            showHelp();
+            displayHelpMessage();
             exit(0);
         } else if (arg[0] == '-') {
             options.push_back(arg);
@@ -70,4 +70,20 @@ void CliArguments::parseArguments(int argc, char* argv[], std::string& gameName,
 // Display help message and usage information
 void CliArguments::displayHelpMessage() {
     std::cout << USAGE;
+}
+
+// Prompt the user for a game name
+std::string CliArguments::getGameNameFromUser() {
+    std::string gameName;
+    std::cout << "Enter game name: ";
+    std::getline(std::cin, gameName);
+    return gameName;
+}
+
+// Handle runtime game name input
+std::string CliArguments::handleRuntimeGameNameInput() {
+    std::string gameName;
+    std::cout << "Enter game name: ";
+    std::getline(std::cin, gameName);
+    return gameName;
 }

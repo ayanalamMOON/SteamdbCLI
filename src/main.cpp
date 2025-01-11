@@ -106,14 +106,8 @@ int main(int argc, char* argv[]) {
     std::cout << "Welcome to Steamdb CLI!" << std::endl;
     std::cout << "Type the name of a game to search for its information." << std::endl;
 
-    std::string gameName = CliArguments::parseGameName(argc, argv);
-    if (gameName.empty()) {
-        return 1;
-    }
-
     while (true) {
-        std::cout << "\nEnter game name (or type 'exit' to quit): ";
-        std::getline(std::cin, gameName);
+        std::string gameName = CliArguments::handleRuntimeGameNameInput();
 
         if (gameName == "exit") {
             break;
