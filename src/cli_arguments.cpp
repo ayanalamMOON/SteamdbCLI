@@ -49,25 +49,23 @@ void CliArguments::recommendGames(const std::vector<std::string>& searchHistory)
     std::cout << "Recommending games based on search history..." << std::endl;
 }
 
-// Parse command-line arguments for options and game names
-void CliArguments::parseArguments(int argc, char* argv[], std::string& gameName, std::vector<std::string>& options) {
-    for (int i = 1; i < argc; ++i) {
-        std::string arg = argv[i];
-        if (arg == "-h" || arg == "--help") {
-            showHelp();
-            exit(0);
-        } else if (arg[0] == '-') {
-            options.push_back(arg);
-        } else {
-            if (!gameName.empty()) {
-                gameName += " ";
-            }
-            gameName += arg;
-        }
-    }
-}
-
 // Display help message and usage information
 void CliArguments::displayHelpMessage() {
     std::cout << USAGE;
+}
+
+// Prompt the user for a game name
+std::string CliArguments::getGameNameFromUser() {
+    std::string gameName;
+    std::cout << "Enter game name: ";
+    std::getline(std::cin, gameName);
+    return gameName;
+}
+
+// Handle runtime game name input
+std::string CliArguments::handleRuntimeGameNameInput() {
+    std::string gameName;
+    std::cout << "Enter game name: ";
+    std::getline(std::cin, gameName);
+    return gameName;
 }
