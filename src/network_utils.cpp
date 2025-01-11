@@ -78,7 +78,7 @@ namespace NetworkUtils {
     }
 
     // Fetch the HTML content of a web page with retry mechanism
-    std::string fetchPageWithRetry(const std::string& url, int maxRetries = 3, int retryDelay = 2000) {
+    std::string fetchPageWithRetry(const std::string& url, int maxRetries, int retryDelay) {
         int attempt = 0;
         while (attempt < maxRetries) {
             try {

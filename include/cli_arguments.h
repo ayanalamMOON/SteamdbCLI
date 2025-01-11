@@ -6,12 +6,6 @@
 
 class CliArguments {
 public:
-    // Show the help message
-    static void showHelp();
-    
-    // Parse the game name from command line arguments
-    static std::string parseGameName(int argc, char* argv[]);
-    
     // Save the search history to a file
     static void saveSearchHistory(const std::vector<std::string>& searchHistory, const std::string& filename);
     
@@ -26,6 +20,18 @@ public:
 
     // Recommend games based on search history
     static void recommendGames(const std::vector<std::string>& searchHistory);
+
+    // Parse command-line arguments for options and game names
+    static void parseArguments(int argc, char* argv[], std::string& gameName, std::vector<std::string>& options);
+
+    // Display help message and usage information
+    static void displayHelpMessage();
+
+    // Prompt the user for a game name
+    static std::string getGameNameFromUser();
+    
+    // Handle runtime game name input
+    static std::string handleRuntimeGameNameInput();
     
 private:
     static const char* USAGE;
@@ -34,34 +40,6 @@ private:
 const char* CliArguments::USAGE = "Usage: steamdb_cli [options] <game_name>\n"
                                   "Options:\n"
                                   "  -h, --help    Show this help message\n";
-
-// Display the usage message
-void CliArguments::showHelp() {
-    std::cout << USAGE;
-}
-
-// Parse the game name from command line arguments
-std::string CliArguments::parseGameName(int argc, char* argv[]) {
-    if (argc < 2) {
-        showHelp();
-        return "";
-    }
-
-    std::string gameName;
-    for (int i = 1; i < argc; ++i) {
-        if (std::string(argv[i]) == "-h" || std::string(argv[i]) == "--help") {
-            showHelp();
-            return "";
-        } else {
-            if (!gameName.empty()) {
-                gameName += " ";
-            }
-            gameName += argv[i];
-        }
-    }
-
-    return gameName;
-}
 
 // Save the search history to a file
 void CliArguments::saveSearchHistory(const std::vector<std::string>& searchHistory, const std::string& filename) {
@@ -88,4 +66,61 @@ std::vector<std::string> CliArguments::loadSearchHistory(const std::string& file
         searchHistory.push_back(line);
     }
     return searchHistory;
+}
+
+// Parse command-line arguments for options and game names
+void CliArguments::parseArguments(int argc, char* argv[], std::string& gameName, std::vector<std::string>& options) {
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        if (arg == "-h" || arg == "--help") {
+            displayHelpMessage();
+            exit(0);
+        } else if (arg[0] == '-') {
+            options.push_back(arg);
+        } else {
+            if (!gameName.empty()) {
+                gameName += " ";
+            }
+            gameName += arg;
+        }
+    }
+}
+
+// Display help message and usage information
+void CliArguments::displayHelpMessage() {
+    std::cout << USAGE;
+}
+
+// Display the user's Steam library
+void CliArguments::displaySteamLibrary() {
+    // Placeholder implementation
+    std::cout << "Displaying user's Steam library..." << std::endl;
+}
+
+// Display the user's wishlist
+void CliArguments::displayWishlist() {
+    // Placeholder implementation
+    std::cout << "Displaying user's wishlist..." << std::endl;
+}
+
+// Recommend games based on search history
+void CliArguments::recommendGames(const std::vector<std::string>& searchHistory) {
+    // Placeholder implementation
+    std::cout << "Recommending games based on search history..." << std::endl;
+}
+
+// Prompt the user for a game name
+std::string CliArguments::getGameNameFromUser() {
+    std::string gameName;
+    std::cout << "Enter game name: ";
+    std::getline(std::cin, gameName);
+    return gameName;
+}
+
+// Handle runtime game name input
+std::string CliArguments::handleRuntimeGameNameInput() {
+    std::string gameName;
+    std::cout << "Enter game name: ";
+    std::getline(std::cin, gameName);
+    return gameName;
 }

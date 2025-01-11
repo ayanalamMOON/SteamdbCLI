@@ -3,6 +3,7 @@
 #include <curl/curl.h>
 #include <regex>
 #include "error_handling.h"
+#include "logger.h"
 
 // Callback function to write data received from the server to a string
 static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
@@ -128,7 +129,14 @@ GameData Scraper::parseGameData(const std::string& html) {
             std::cerr << "Warning: Could not fetch detailed information: " << e.what() << std::endl;
         }
     } else {
-        throw std::runtime_error("Could not parse search results");
+        // Detailed error handling for parsing failures
+        std::regex errorRegex("<div[^>]*class=\"error\"[^>]*>(.*?)</div>");
+        std::smatch errorMatch;
+        if (std::regex_search(html, errorMatch, errorRegex)) {
+            throw ParsingError("Parsing error: " + errorMatch[1].str());
+        } else {
+            throw ParsingError("Could not parse search results. HTML content may have changed.");
+        }
     }
 
     return gameData;

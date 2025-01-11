@@ -48,3 +48,24 @@ void CliArguments::recommendGames(const std::vector<std::string>& searchHistory)
     // Placeholder implementation
     std::cout << "Recommending games based on search history..." << std::endl;
 }
+
+// Display help message and usage information
+void CliArguments::displayHelpMessage() {
+    std::cout << USAGE;
+}
+
+// Prompt the user for a game name
+std::string CliArguments::getGameNameFromUser() {
+    std::string gameName;
+    std::cout << "Enter game name: ";
+    std::getline(std::cin, gameName);
+    return gameName;
+}
+
+// Handle runtime game name input
+std::string CliArguments::handleRuntimeGameNameInput() {
+    std::string gameName;
+    std::cout << "Enter game name: ";
+    std::getline(std::cin, gameName);
+    return gameName;
+}
