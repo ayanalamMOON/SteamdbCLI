@@ -16,6 +16,7 @@ add_executable(SteamdbCLI
     src/scraper.cpp
     src/network_utils.cpp
     src/rate_limiter.cpp
+    src/logger.cpp
 )
 
 # Find and link external libraries

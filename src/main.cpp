@@ -4,7 +4,6 @@
 #include <ctime>
 #include <cstdlib>
 #include "scraper.h"
-#include "logger.h"
 #include "game_cache.h"
 #include "config.h"
 #include <iomanip>
@@ -89,9 +88,6 @@ void displayProgressBar(int progress, int total) {
 
 // Main function to run the Steamdb CLI program
 int main(int argc, char* argv[]) {
-    Logger logger;
-    logger.init("steamdb_cli.log");
-
     GameCache gameCache;
     std::vector<std::string> searchHistory;
 
@@ -119,7 +115,6 @@ int main(int argc, char* argv[]) {
             if (gameCache.hasGame(gameName)) {
                 GameData cachedData = gameCache.getGame(gameName);
                 displayGameInfo(cachedData);
-                logger.info("Fetched cached data for game: " + gameName);
             } else {
                 Scraper scraper;
                 std::cout << "Fetching data for game: " << gameName << std::endl;
@@ -131,16 +126,13 @@ int main(int argc, char* argv[]) {
                 GameData gameData = scraper.searchGame(gameName);
                 gameCache.addGame(gameName, gameData);
                 displayGameInfo(gameData);
-                logger.info("Fetched data for game: " + gameName);
             }
         } catch (const NetworkError& e) {
             std::cerr << "\033[1;31mNetwork Error: " << e.what() << "\033[0m" << std::endl;
             std::cerr << "Please check your internet connection and try again." << std::endl;
-            logger.error("Network error while fetching data for game: " + gameName, __FUNCTION__, __FILE__, __LINE__);
         } catch (const std::exception& e) {
             std::cerr << "\033[1;31mError: " << e.what() << "\033[0m" << std::endl;
             std::cerr << "An unexpected error occurred. Please try again later." << std::endl;
-            logger.error("Error while fetching data for game: " + gameName, __FUNCTION__, __FILE__, __LINE__);
         }
     }
 
