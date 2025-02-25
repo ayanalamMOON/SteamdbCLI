@@ -1,5 +1,36 @@
 #include "logger.h"
 
+// Initialize the logger with a file name
+void Logger::init(const std::string& filename) {
+    std::lock_guard<std::mutex> lock(logMutex);
+    logFile.open(filename, std::ios::out | std::ios::app);
+    if (!logFile.is_open()) {
+        throw std::runtime_error("Failed to open log file: " + filename);
+    }
+}
+
+// Log an info message
+void Logger::info(const std::string& message) {
+    log("INFO", message);
+}
+
+// Log a warning message
+void Logger::warning(const std::string& message) {
+    log("WARNING", message);
+}
+
+// Log an error message
+void Logger::error(const std::string& message, const std::string& functionName, const std::string& fileName, int lineNumber) {
+    std::ostringstream oss;
+    oss << message << " [Function: " << functionName << ", File: " << fileName << ", Line: " << lineNumber << "]";
+    log("ERROR", oss.str());
+}
+
+// Log a debug message
+void Logger::debug(const std::string& message) {
+    log("DEBUG", message);
+}
+
 // Log a retry attempt for a failed network request
 void Logger::logRetryAttempt(const std::string& url, int attemptNumber) {
     std::ostringstream oss;
