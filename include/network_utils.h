@@ -1,12 +1,6 @@
 #pragma once
 #include <string>
-#include <stdexcept>
-
-// Represents an error that occurs during network operations
-class NetworkError : public std::runtime_error {
-public:
-    explicit NetworkError(const std::string& message) : std::runtime_error(message) {}
-};
+#include "error_handling.h"
 
 namespace NetworkUtils {
     // Check if there is an active internet connection

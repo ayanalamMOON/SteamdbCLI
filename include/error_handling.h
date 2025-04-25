@@ -15,5 +15,11 @@ public:
     explicit FileIOError(const std::string& message) : std::runtime_error(message) {}
 };
 
+// Custom exception class for network errors
+class NetworkError : public std::runtime_error {
+public:
+    explicit NetworkError(const std::string& message) : std::runtime_error(message) {}
+};
+
 // Declare the global error handler function as an external function
 extern void globalErrorHandler();
