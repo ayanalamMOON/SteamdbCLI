@@ -3,6 +3,8 @@
 #include <vector>
 #include <ctime>
 #include <cstdlib>
+#include <thread>
+#include <chrono>
 #include "scraper.h"
 #include "logger.h"
 #include "game_cache.h"
