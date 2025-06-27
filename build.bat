@@ -10,10 +10,12 @@ cd build
 rem Set environment variables for the C and C++ compilers
 set CMAKE_C_COMPILER=C:\msys64\ucrt64\bin\gcc.exe
 set CMAKE_CXX_COMPILER=C:\msys64\ucrt64\bin\g++.exe
+set PKG_CONFIG_PATH=C:\msys64\ucrt64\lib\pkgconfig
+set PATH=C:\msys64\ucrt64\bin;%PATH%
 
-rem Run CMake with MinGW Makefiles generator and specify CURL paths
+rem Run CMake with MinGW Makefiles generator
 echo Running CMake configuration...
-cmake -G "MinGW Makefiles" ^
+C:\msys64\ucrt64\bin\cmake.exe -G "MinGW Makefiles" ^
       -DCMAKE_C_COMPILER=C:/msys64/ucrt64/bin/gcc.exe ^
       -DCMAKE_CXX_COMPILER=C:/msys64/ucrt64/bin/g++.exe ^
       -DCMAKE_PREFIX_PATH=C:/msys64/ucrt64 ^

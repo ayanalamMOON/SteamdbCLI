@@ -30,19 +30,16 @@ add_executable(SteamdbCLI
 )
 
 # Find and link external libraries
-# For CURL, manually specify package components to avoid issues
-find_package(CURL REQUIRED)
-if(CURL_FOUND)
-    include_directories(${CURL_INCLUDE_DIRS})
-    target_link_libraries(SteamdbCLI ${CURL_LIBRARIES})
-else()
-    message(FATAL_ERROR "CURL library not found. Please install libcurl development files.")
-endif()
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(CURL REQUIRED libcurl)
+
+target_include_directories(SteamdbCLI PRIVATE ${CURL_INCLUDE_DIRS})
+target_link_libraries(SteamdbCLI ${CURL_LIBRARIES})
+target_compile_options(SteamdbCLI PRIVATE ${CURL_CFLAGS_OTHER})
 
 # Add threads support
 find_package(Threads REQUIRED)
-target_link_libraries(SteamdbCLI ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(SteamdbCLI Threads::Threads)
 
-# Print status messages
-message(STATUS "CURL include dir: ${CURL_INCLUDE_DIRS}")
-message(STATUS "CURL libraries: ${CURL_LIBRARIES}")
+# Add Windows-specific libraries
+target_link_libraries(SteamdbCLI ws2_32 wldap32 crypt32)
