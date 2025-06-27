@@ -1,0 +1,3 @@
+[2025-06-27 20:27:53] [WARNING] Steam API initialization failed
+[2025-06-27 20:27:56] [ERROR] Error while fetching data for game:  [Function: main, File: C:\Users\ayana\Projects\SteamdbCLI\src\main.cpp, Line: 481]
+[2025-06-27 20:28:00] [ERROR] Error while fetching data for game:  [Function: main, File: C:\Users\ayana\Projects\SteamdbCLI\src\main.cpp, Line: 481]

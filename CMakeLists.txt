@@ -27,6 +27,7 @@ add_executable(SteamdbCLI
     src/cli_arguments.cpp
     src/game_cache.cpp
     src/error_handling.cpp
+    src/steam_api_helper.cpp
 )
 
 # Find and link external libraries

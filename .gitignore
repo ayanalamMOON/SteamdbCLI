@@ -52,3 +52,13 @@ install_manifest.txt
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Configuration files with sensitive data
+config.txt
+.env
+*.env
+api_keys.txt
+secrets.txt
+*.txt
+# vcpkg files
+vcpkg_installed/

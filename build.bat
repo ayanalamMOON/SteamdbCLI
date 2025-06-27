@@ -40,4 +40,12 @@ if %ERRORLEVEL% neq 0 (
 
 echo.
 echo Build successful! The executable is located at build\SteamdbCLI.exe
+
+rem Copy config file to build directory for convenience
+if exist config.txt (
+    copy config.txt build\config.txt >nul 2>&1
+    echo Configuration file copied to build directory.
+) else (
+    echo Warning: config.txt not found in root directory.
+)
 cd ..
