@@ -1,0 +1,22 @@
+# Steam API Configuration Template
+# Copy this file to config.txt and fill in your actual API key
+STEAM_API_KEY=YOUR_STEAM_API_KEY_HERE
+
+# Steam API Base URLs
+STEAM_API_BASE_URL=https://api.steampowered.com
+STEAM_STORE_API_BASE_URL=https://store.steampowered.com/api
+
+# Rate limiting settings
+API_RATE_LIMIT_PER_MINUTE=200
+API_RATE_LIMIT_PER_HOUR=10000
+
+# Cache settings
+CACHE_EXPIRY_HOURS=24
+ENABLE_CACHING=true
+
+# Display settings
+color_output=true
+
+# Logging settings
+LOG_LEVEL=INFO
+LOG_FILE=steamdb_cli.log

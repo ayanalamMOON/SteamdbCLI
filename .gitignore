@@ -59,6 +59,9 @@ config.txt
 *.env
 api_keys.txt
 secrets.txt
-*.txt
+
+# Log files and other generated text files
+steamdb_cli.log
+*.log
 # vcpkg files
 vcpkg_installed/
